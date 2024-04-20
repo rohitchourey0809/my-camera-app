@@ -56,23 +56,18 @@
  
 }
 
-.image-container {
-  position: relative;
-  padding: 2px 2px 2px 2px;
-  flex: 1 1 calc(33% - 20px);
-  max-width: calc(33% - 20px);
-  max-height: calc(33.33vw - 20px);
-  
-}
+
 
 .delete-button {
+  margin-top: 5px; /* Adjust as needed */
   padding: 5px 10px;
   border: none;
-  background-color: #f44336;
+  background-color: rgb(208, 10, 10);
   color: white;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+
 }
 
 .delete-button:hover {
@@ -109,3 +104,19 @@
     max-height: calc(100vw - 20px);
   }
 }
+
+.image-container {
+  position: relative;
+  padding: 2px;
+  flex: 1 1 calc(33% - 20px);
+  max-width: calc(33% - 20px);
+  max-height: calc(33.33vw - 20px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+
