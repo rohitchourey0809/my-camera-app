@@ -1,0 +1,111 @@
+.camera-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.webcam-container {
+  display: flex;
+  justify-content: center;
+}
+
+.webcam {
+  /* Add styles as needed to center the webcam */
+  max-width: 100%;
+}
+
+.controls-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.capture-button,
+.aspect-ratio-selector button,
+.zoom-controls button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.capture-button:hover,
+.aspect-ratio-selector button:hover,
+.zoom-controls button:hover {
+  background-color: #45a049;
+}
+
+.gallery-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  
+}
+
+.gallery-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+ 
+}
+
+.image-container {
+  position: relative;
+  padding: 2px 2px 2px 2px;
+  flex: 1 1 calc(33% - 20px);
+  max-width: calc(33% - 20px);
+  max-height: calc(33.33vw - 20px);
+  
+}
+
+.delete-button {
+  padding: 5px 10px;
+  border: none;
+  background-color: #f44336;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #d32f2f;
+}
+
+/* Additional CSS for responsiveness */
+
+@media (max-width: 768px) {
+  .delete-button {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .delete-button {
+    font-size: 10px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .image-container {
+    flex: 1 1 calc(50% - 20px);
+    max-width: calc(50% - 20px);
+    max-height: calc(50vw - 20px);
+  }
+}
+
+@media (max-width: 480px) {
+  .image-container {
+    flex: 1 1 calc(100% - 20px);
+    max-width: calc(100% - 20px);
+    max-height: calc(100vw - 20px);
+  }
+}

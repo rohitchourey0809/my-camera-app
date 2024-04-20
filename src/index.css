@@ -1,5 +1,13 @@
-body {
+/* styles.css */
+
+/* Reset default browser styles */
+body, h1, h2, h3, p, ul, ol, li, figure, figcaption, blockquote, dl, dd {
   margin: 0;
+  padding: 0;
+}
+
+/* Apply default font and antialiasing */
+body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -7,7 +15,95 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Set box-sizing to border-box for easier layout */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Improve readability and styling for code elements */
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Center content vertically and horizontally */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Style buttons */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  border: 2px solid transparent;
+  border-radius: 0.25rem;
+  background-color: #4a90e2;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.btn:hover {
+  background-color: #3572b0;
+}
+
+/* Style gallery images */
+.gallery-image {
+  width: 200px;
+  height: 150px;
+  object-fit: cover;
+  margin: 5px;
+}
+
+/* style.css */
+
+.camera {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.webcam-container {
+  width: 100%;
+  max-width: 640px; /* Adjust as needed */
+  aspect-ratio: 16/9; /* Default aspect ratio */
+}
+
+.aspect-ratio-selector {
+  margin-top: 10px;
+}
+
+.aspect-ratio-selector button {
+  margin-right: 5px;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.gallery-item {
+  overflow: hidden;
+  margin: 5px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.gallery-item:hover {
+  transform: scale(1.1);
+}
+
+.gallery-image {
+  width: 100%;
+  height: auto;
+}
+
