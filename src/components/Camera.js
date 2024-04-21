@@ -99,12 +99,6 @@ const Camera = () => {
         <div className="aspect-ratio-selector">
           <button
             className="capture-button"
-            onClick={() => handleAspectRatioChange("1:1")}
-          >
-            1:1
-          </button>
-          <button
-            className="capture-button"
             onClick={() => handleAspectRatioChange("16:9")}
           >
             16:9
@@ -114,6 +108,12 @@ const Camera = () => {
             onClick={() => handleAspectRatioChange("4:3")}
           >
             4:3
+          </button>
+          <button
+            className="capture-button"
+            onClick={() => handleAspectRatioChange("1:1")}
+          >
+            1:1
           </button>
         </div>
         <div className="zoom-controls">
