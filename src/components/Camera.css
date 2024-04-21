@@ -1,122 +1,84 @@
-.camera-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.webcam-container {
-  display: flex;
-  justify-content: center;
-}
-
-.webcam {
-  /* Add styles as needed to center the webcam */
-  max-width: 100%;
-}
-
-.controls-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.gallery-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 10px;
 }
 
-.capture-button,
-.aspect-ratio-selector button,
-.zoom-controls button {
-  padding: 10px 20px;
-  border: none;
-  background-color: #4caf50;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.capture-button:hover,
-.aspect-ratio-selector button:hover,
-.zoom-controls button:hover {
-  background-color: #45a049;
-}
-
-.gallery-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  
-}
-
 .gallery-item {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
- 
-}
-
-
-
-.delete-button {
-  margin-top: 5px; /* Adjust as needed */
-  padding: 5px 10px;
-  border: none;
-  background-color: rgb(208, 10, 10);
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-}
-
-.delete-button:hover {
-  background-color: #d32f2f;
-}
-
-/* Additional CSS for responsiveness */
-
-@media (max-width: 768px) {
-  .delete-button {
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .delete-button {
-    font-size: 10px;
-  }
-}
-
-
-@media (max-width: 768px) {
-  .image-container {
-    flex: 1 1 calc(50% - 20px);
-    max-width: calc(50% - 20px);
-    max-height: calc(50vw - 20px);
-  }
-}
-
-@media (max-width: 480px) {
-  .image-container {
-    flex: 1 1 calc(100% - 20px);
-    max-width: calc(100% - 20px);
-    max-height: calc(100vw - 20px);
-  }
+  width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
 .image-container {
   position: relative;
-  padding: 2px;
-  flex: 1 1 calc(33% - 20px);
-  max-width: calc(33% - 20px);
-  max-height: calc(33.33vw - 20px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
+.gallery-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 
+.delete-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: red;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
+.camera-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
 
+.webcam-container {
+  width: 100%;
+  max-width: 800px; /* Adjust max width as needed */
+  margin-bottom: 20px;
+}
+
+.controls-container {
+  display: flex;
+  flex-direction: column; /* Adjusted to column layout */
+  align-items: center; /* Center align items */
+  margin-bottom: 20px;
+}
+
+.aspect-ratio-selector,
+.zoom-controls {
+  margin-bottom: 10px; /* Adjusted margin for spacing between buttons */
+}
+
+.capture-button {
+  background-color: green;
+  color: white;
+  padding: 10px 20px 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .controls-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .aspect-ratio-selector,
+  .zoom-controls {
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .webcam-container {
+    max-width: calc(100% - 40px); /* Adjust margins for smaller screens */
+  }
+}

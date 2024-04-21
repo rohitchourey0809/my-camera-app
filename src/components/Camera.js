@@ -5,11 +5,8 @@ import "./Camera.css";
 const Camera = () => {
   const webcamRef = useRef(null);
   const [aspectRatio, setAspectRatio] = useState("16:9");
-  const [captureImagesByAspectRatio, setCaptureImagesByAspectRatio] = useState({
-    "16:9": [],
-    "4:3": [],
-    "1:1": [],
-  });
+  const [captureImages, setCaptureImages] = useState([]);
+
   const [videoConstraints, setVideoConstraints] = useState({
     facingMode: "user",
   });
@@ -45,29 +42,16 @@ const Camera = () => {
   };
 
   const handleZoom = (delta) => {
-    setVideoConstraints((prevConstraints) => {
-      const newZoom = (prevConstraints.zoom || 1) + delta;
-      const newFocusDistance = 1 / newZoom; // Adjust focus distance inversely with zoom
-      return {
-        ...prevConstraints,
-        zoom: newZoom,
-        focusMode: "manual",
-        focusDistance: newFocusDistance,
-      };
-    });
+    setVideoConstraints((prevConstraints) => ({
+      ...prevConstraints,
+      zoom: (prevConstraints.zoom || 1) + delta,
+    }));
   };
-
 
   const captureClickImage = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
     const croppedImage = await cropImage(imageSrc);
-    setCaptureImagesByAspectRatio((prevCaptureImagesByAspectRatio) => ({
-      ...prevCaptureImagesByAspectRatio,
-      [aspectRatio]: [
-        ...prevCaptureImagesByAspectRatio[aspectRatio],
-        croppedImage,
-      ],
-    }));
+    setCaptureImages([...captureImages, { src: croppedImage, aspectRatio }]);
   };
 
   const cropImage = (imageSrc) => {
@@ -75,73 +59,90 @@ const Camera = () => {
       const img = new Image();
       img.src = imageSrc;
       img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const [width, height] = aspectRatio.split(":").map(Number);
-        const ratio = Math.min(img.width / width, img.height / height);
-        canvas.width = width * ratio;
-        canvas.height = height * ratio;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL("image/jpeg"));
+        resolve(img.src); // Capture entire frame
       };
     });
   };
 
-  const handleDeleteImage = (aspectRatio, index) => {
-    setCaptureImagesByAspectRatio((prevCaptureImagesByAspectRatio) => ({
-      ...prevCaptureImagesByAspectRatio,
-      [aspectRatio]: prevCaptureImagesByAspectRatio[aspectRatio].filter(
-        (_, i) => i !== index
-      ),
-    }));
+  const handleDeleteImage = (index) => {
+    setCaptureImages(captureImages.filter((_, i) => i !== index));
   };
 
   return (
     <div className="camera-container">
-      <div className="webcam-container">
-        <Webcam
-          audio={false}
-          mirrored={true}
-          ref={webcamRef}
-          screenshotFormat="image/jpeg"
-          aspectRatio={aspectRatio}
-          videoConstraints={videoConstraints}
-          className="webcam"
-        />
-      </div>
       <div className="controls-container">
         <div className="aspect-ratio-selector">
-          <button onClick={() => handleAspectRatioChange("16:9")}>16:9</button>
-          <button onClick={() => handleAspectRatioChange("4:3")}>4:3</button>
-          <button onClick={() => handleAspectRatioChange("1:1")}>1:1</button>
+          <button
+            className="capture-button"
+            onClick={() => handleAspectRatioChange("16:9")}
+          >
+            16:9
+          </button>
+          <button
+            className="capture-button"
+            onClick={() => handleAspectRatioChange("4:3")}
+          >
+            4:3
+          </button>
+          <button
+            className="capture-button"
+            onClick={() => handleAspectRatioChange("1:1")}
+          >
+            1:1
+          </button>
         </div>
         <div className="zoom-controls">
-          <button onClick={handleToggleCamera}>Toggle Camera</button>
-          <button onClick={() => handleZoom(0.1)}>Zoom In</button>
-          <button onClick={() => handleZoom(-0.1)}>Zoom Out</button>
+          <button className="capture-button" onClick={handleToggleCamera}>
+            Toggle Camera
+          </button>
+          <button className="capture-button" onClick={() => handleZoom(0.1)}>
+            Zoom In
+          </button>
+          <button className="capture-button" onClick={() => handleZoom(-0.1)}>
+            Zoom Out
+          </button>
         </div>
         <button onClick={captureClickImage} className="capture-button">
           Capture
         </button>
       </div>
+      <div
+        className="webcam-container"
+        style={{
+          paddingBottom: `${
+            100 / (aspectRatio.split(":")[0] / aspectRatio.split(":")[1])
+          }%`,
+        }}
+      >
+        <div className="webcam-wrapper">
+          <Webcam
+            audio={false}
+            mirrored={true}
+            ref={webcamRef}
+            screenshotFormat="image/jpeg"
+            aspectRatio={aspectRatio}
+            videoConstraints={videoConstraints}
+            className="webcam"
+          />
+        </div>
+      </div>
       <div className="gallery-container">
-        {Object.entries(captureImagesByAspectRatio).map(([aspect, images]) => (
-          <div key={aspect} className="gallery-item">
-            {images.map((imageSrc, index) => (
-              <div key={index} className="image-container">
-                <img
-                  src={imageSrc}
-                  alt={`Captured ${index}`}
-                  className="gallery-image"
-                />
-                <button
-                  onClick={() => handleDeleteImage(aspect, index)}
-                  className="delete-button"
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
+        {captureImages.map(({ src, aspectRatio }, index) => (
+          <div key={index} className="gallery-item">
+            <div className="image-container">
+              <img
+                src={src}
+                alt={`Captured ${index}`}
+                className="gallery-image"
+                style={{ aspectRatio }}
+              />
+              <button
+                onClick={() => handleDeleteImage(index)}
+                className="delete-button"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
       </div>
