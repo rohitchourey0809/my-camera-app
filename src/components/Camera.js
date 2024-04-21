@@ -5,14 +5,13 @@ import "./Camera.css";
 const Camera = () => {
   const webcamRef = useRef(null);
   const [aspectRatio, setAspectRatio] = useState("16:9");
-  const [captureImage, setCaptureImage] = useState([]);
-  const [videoConstraints, setVideoConstraints] = useState({
-    facingMode: "user",
-  });
   const [captureImagesByAspectRatio, setCaptureImagesByAspectRatio] = useState({
     "16:9": [],
     "4:3": [],
     "1:1": [],
+  });
+  const [videoConstraints, setVideoConstraints] = useState({
+    facingMode: "user",
   });
 
   const handleAspectRatioChange = (newAspectRatio) => {
@@ -45,38 +44,56 @@ const Camera = () => {
     }));
   };
 
-  const handleZoomIn = () => {
-    setVideoConstraints((prevConstraints) => ({
-      ...prevConstraints,
-      zoom: (prevConstraints.zoom || 1) + 0.1,
-    }));
+  const handleZoom = (delta) => {
+    setVideoConstraints((prevConstraints) => {
+      const newZoom = (prevConstraints.zoom || 1) + delta;
+      const newFocusDistance = 1 / newZoom; // Adjust focus distance inversely with zoom
+      return {
+        ...prevConstraints,
+        zoom: newZoom,
+        focusMode: "manual",
+        focusDistance: newFocusDistance,
+      };
+    });
   };
 
-  const handleZoomOut = () => {
-    setVideoConstraints((prevConstraints) => ({
-      ...prevConstraints,
-      zoom: (prevConstraints.zoom || 1) - 0.1,
-    }));
-  };
 
-  const captureClickImage = () => {
+  const captureClickImage = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    setCaptureImage([...captureImage, imageSrc]);
-
+    const croppedImage = await cropImage(imageSrc);
     setCaptureImagesByAspectRatio((prevCaptureImagesByAspectRatio) => ({
       ...prevCaptureImagesByAspectRatio,
-      [aspectRatio]: [...prevCaptureImagesByAspectRatio[aspectRatio], imageSrc],
+      [aspectRatio]: [
+        ...prevCaptureImagesByAspectRatio[aspectRatio],
+        croppedImage,
+      ],
     }));
+  };
+
+  const cropImage = (imageSrc) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = imageSrc;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const [width, height] = aspectRatio.split(":").map(Number);
+        const ratio = Math.min(img.width / width, img.height / height);
+        canvas.width = width * ratio;
+        canvas.height = height * ratio;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg"));
+      };
+    });
   };
 
   const handleDeleteImage = (aspectRatio, index) => {
-    const updatedImages = captureImagesByAspectRatio[aspectRatio].filter(
-      (_, i) => i !== index
-    );
-    setCaptureImagesByAspectRatio({
-      ...captureImagesByAspectRatio,
-      [aspectRatio]: updatedImages,
-    });
+    setCaptureImagesByAspectRatio((prevCaptureImagesByAspectRatio) => ({
+      ...prevCaptureImagesByAspectRatio,
+      [aspectRatio]: prevCaptureImagesByAspectRatio[aspectRatio].filter(
+        (_, i) => i !== index
+      ),
+    }));
   };
 
   return (
@@ -100,8 +117,8 @@ const Camera = () => {
         </div>
         <div className="zoom-controls">
           <button onClick={handleToggleCamera}>Toggle Camera</button>
-          <button onClick={handleZoomIn}>Zoom In</button>
-          <button onClick={handleZoomOut}>Zoom Out</button>
+          <button onClick={() => handleZoom(0.1)}>Zoom In</button>
+          <button onClick={() => handleZoom(-0.1)}>Zoom Out</button>
         </div>
         <button onClick={captureClickImage} className="capture-button">
           Capture
