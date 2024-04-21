@@ -1,15 +1,37 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import "./Camera.css";
 
 const Camera = () => {
   const webcamRef = useRef(null);
-  const [aspectRatio, setAspectRatio] = useState("16:9");
+  const galleryRef = useRef(null); // Reference to the gallery container
+  const [aspectRatio, setAspectRatio] = useState("1:1");
   const [captureImages, setCaptureImages] = useState([]);
 
   const [videoConstraints, setVideoConstraints] = useState({
     facingMode: "user",
   });
+
+  useEffect(() => {
+    // Set video constraints for default aspect ratio
+    const [width, height] = aspectRatio.split(":").map(Number);
+    const screenWidth = window.screen.width;
+    const screenHeight = window.screen.height;
+
+    let maxWidth = screenWidth;
+    let maxHeight = screenHeight;
+    if (screenWidth > screenHeight) {
+      maxWidth = Math.min(screenWidth, screenHeight * (width / height));
+    } else {
+      maxHeight = Math.min(screenHeight, screenWidth * (height / width));
+    }
+
+    setVideoConstraints((prevConstraints) => ({
+      ...prevConstraints,
+      width: maxWidth,
+      height: maxHeight,
+    }));
+  }, [aspectRatio]);
 
   const handleAspectRatioChange = (newAspectRatio) => {
     setAspectRatio(newAspectRatio);
@@ -52,6 +74,9 @@ const Camera = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     const croppedImage = await cropImage(imageSrc);
     setCaptureImages([...captureImages, { src: croppedImage, aspectRatio }]);
+
+    // Scroll to the gallery after capturing a photo
+    galleryRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   const cropImage = (imageSrc) => {
@@ -74,6 +99,12 @@ const Camera = () => {
         <div className="aspect-ratio-selector">
           <button
             className="capture-button"
+            onClick={() => handleAspectRatioChange("1:1")}
+          >
+            1:1
+          </button>
+          <button
+            className="capture-button"
             onClick={() => handleAspectRatioChange("16:9")}
           >
             16:9
@@ -83,12 +114,6 @@ const Camera = () => {
             onClick={() => handleAspectRatioChange("4:3")}
           >
             4:3
-          </button>
-          <button
-            className="capture-button"
-            onClick={() => handleAspectRatioChange("1:1")}
-          >
-            1:1
           </button>
         </div>
         <div className="zoom-controls">
@@ -126,7 +151,9 @@ const Camera = () => {
           />
         </div>
       </div>
-      <div className="gallery-container">
+      <h2 className="GalleryOverview">Gallery Overview</h2>
+
+      <div ref={galleryRef} className="gallery-container">
         {captureImages.map(({ src, aspectRatio }, index) => (
           <div key={index} className="gallery-item">
             <div className="image-container">
