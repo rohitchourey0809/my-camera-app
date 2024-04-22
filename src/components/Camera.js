@@ -4,16 +4,14 @@ import "./Camera.css";
 
 const Camera = () => {
   const webcamRef = useRef(null);
-  const galleryRef = useRef(null); // Reference to the gallery container
+  const galleryRef = useRef(null);
   const [aspectRatio, setAspectRatio] = useState("1:1");
   const [captureImages, setCaptureImages] = useState([]);
-
   const [videoConstraints, setVideoConstraints] = useState({
     facingMode: "user",
   });
 
   useEffect(() => {
-    // Set video constraints for default aspect ratio
     const [width, height] = aspectRatio.split(":").map(Number);
     const screenWidth = window.screen.width;
     const screenHeight = window.screen.height;
@@ -75,7 +73,6 @@ const Camera = () => {
     const croppedImage = await cropImage(imageSrc);
     setCaptureImages([...captureImages, { src: croppedImage, aspectRatio }]);
 
-    // Scroll to the gallery after capturing a photo
     galleryRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -84,7 +81,7 @@ const Camera = () => {
       const img = new Image();
       img.src = imageSrc;
       img.onload = () => {
-        resolve(img.src); // Capture entire frame
+        resolve(img.src);
       };
     });
   };
@@ -95,63 +92,59 @@ const Camera = () => {
 
   return (
     <div className="camera-container">
-      <div className="controls-container">
-        <div className="aspect-ratio-selector">
-          <button
-            className="capture-button"
-            onClick={() => handleAspectRatioChange("16:9")}
-          >
-            16:9
-          </button>
-          <button
-            className="capture-button"
-            onClick={() => handleAspectRatioChange("4:3")}
-          >
-            4:3
-          </button>
-          <button
-            className="capture-button"
-            onClick={() => handleAspectRatioChange("1:1")}
-          >
-            1:1
-          </button>
-        </div>
-        <div className="zoom-controls">
-          <button className="capture-button" onClick={handleToggleCamera}>
-            Toggle Camera
-          </button>
-          <button className="capture-button" onClick={() => handleZoom(0.1)}>
-            Zoom In
-          </button>
-          <button className="capture-button" onClick={() => handleZoom(-0.1)}>
-            Zoom Out
-          </button>
-        </div>
-        <button onClick={captureClickImage} className="capture-button">
+      <div className="button-container">
+        <button
+          className="capture-button colored"
+          onClick={() => handleAspectRatioChange("16:9")}
+        >
+          16:9
+        </button>
+        <button
+          className="capture-button colored"
+          onClick={() => handleAspectRatioChange("4:3")}
+        >
+          4:3
+        </button>
+        <button
+          className="capture-button colored"
+          onClick={() => handleAspectRatioChange("1:1")}
+        >
+          1:1
+        </button>
+        <button className="capture-button colored" onClick={handleToggleCamera}>
+          Toggle Camera
+        </button>
+        <button
+          className="capture-button colored"
+          onClick={() => handleZoom(0.1)}
+        >
+          Zoom In
+        </button>
+        <button
+          className="capture-button colored"
+          onClick={() => handleZoom(-0.1)}
+        >
+          Zoom Out
+        </button>
+        <button onClick={captureClickImage} className="capture-button colored">
           Capture
         </button>
       </div>
-      <div
-        className="webcam-container"
-        style={{
-          paddingBottom: `${
-            100 / (aspectRatio.split(":")[0] / aspectRatio.split(":")[1])
-          }%`,
-        }}
-      >
+      <div className="webcam-container">
         <div className="webcam-wrapper">
-          <Webcam
-            audio={false}
-            mirrored={true}
-            ref={webcamRef}
-            screenshotFormat="image/jpeg"
-            aspectRatio={aspectRatio}
-            videoConstraints={videoConstraints}
-            className="webcam"
-          />
+          <div className="fixed-webcam-container">
+            <Webcam
+              audio={false}
+              mirrored={true}
+              ref={webcamRef}
+              screenshotFormat="image/jpeg"
+              aspectRatio={aspectRatio}
+              videoConstraints={videoConstraints}
+              className="webcam"
+            />
+          </div>
         </div>
       </div>
-      <h2 className="GalleryOverview">Gallery Overview</h2>
 
       <div ref={galleryRef} className="gallery-container">
         {captureImages.map(({ src, aspectRatio }, index) => (
@@ -165,7 +158,7 @@ const Camera = () => {
               />
               <button
                 onClick={() => handleDeleteImage(index)}
-                className="delete-button"
+                className="delete-button colored"
               >
                 Delete
               </button>
