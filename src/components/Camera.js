@@ -61,12 +61,20 @@ const Camera = () => {
     }));
   };
 
-  const handleZoom = (delta) => {
-    setVideoConstraints((prevConstraints) => ({
-      ...prevConstraints,
-      zoom: (prevConstraints.zoom || 1) + delta,
-    }));
-  };
+ const handleZoom = (delta) => {
+   const newZoom = (videoConstraints.zoom || 1) + delta;
+
+   const newWidth = videoConstraints.width / newZoom;
+   const newHeight = videoConstraints.height / newZoom;
+
+   setVideoConstraints((prevConstraints) => ({
+     ...prevConstraints,
+     zoom: newZoom,
+     width: newWidth,
+     height: newHeight,
+   }));
+ };
+
 
   const captureClickImage = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
