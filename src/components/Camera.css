@@ -65,18 +65,13 @@
   }
 }
 
-.webcam-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
 .gallery-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px;
-  margin-top: 200px; /* Add margin-top to create space between webcam and gallery */
+  margin: 230px; /* Add margin-top to create space between webcam and gallery */
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding-right: 1%;
 }
 
 .gallery-item {
@@ -86,6 +81,8 @@
 
 .image-container {
   position: relative;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding: auto;
 }
 
 .gallery-image {
