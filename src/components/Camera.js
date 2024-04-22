@@ -4,16 +4,16 @@ import "./Camera.css";
 
 const Camera = () => {
   const webcamRef = useRef(null);
-  const galleryRef = useRef(null);
+  const galleryRef = useRef(null); // Reference to the gallery container
   const [aspectRatio, setAspectRatio] = useState("1:1");
   const [captureImages, setCaptureImages] = useState([]);
-  const [zoomLevel, setZoomLevel] = useState(1);
 
   const [videoConstraints, setVideoConstraints] = useState({
     facingMode: "user",
   });
 
   useEffect(() => {
+    // Set video constraints for default aspect ratio
     const [width, height] = aspectRatio.split(":").map(Number);
     const screenWidth = window.screen.width;
     const screenHeight = window.screen.height;
@@ -63,21 +63,19 @@ const Camera = () => {
     }));
   };
 
-  const handleZoomIn = () => {
-    setZoomLevel(zoomLevel + 0.1);
-  };
-
-  const handleZoomOut = () => {
-    setZoomLevel(zoomLevel - 0.1);
+  const handleZoom = (delta) => {
+    setVideoConstraints((prevConstraints) => ({
+      ...prevConstraints,
+      zoom: (prevConstraints.zoom || 1) + delta,
+    }));
   };
 
   const captureClickImage = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    
     const croppedImage = await cropImage(imageSrc);
-    const scaledImage = await scaleImage(croppedImage, zoomLevel);
-    setCaptureImages([...captureImages, { src: scaledImage, aspectRatio }]);
+    setCaptureImages([...captureImages, { src: croppedImage, aspectRatio }]);
 
+    // Scroll to the gallery after capturing a photo
     galleryRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -86,28 +84,10 @@ const Camera = () => {
       const img = new Image();
       img.src = imageSrc;
       img.onload = () => {
-        resolve(img.src);
+        resolve(img.src); // Capture entire frame
       };
     });
   };
-
-  const scaleImage = (imageSrc, scale) => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        const scaledWidth = img.width * scale;
-        const scaledHeight = img.height * scale;
-        canvas.width = scaledWidth;
-        canvas.height = scaledHeight;
-        ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
-        resolve(canvas.toDataURL("image/jpeg"));
-      };
-      img.src = imageSrc;
-    });
-  };
-
 
   const handleDeleteImage = (index) => {
     setCaptureImages(captureImages.filter((_, i) => i !== index));
@@ -115,55 +95,64 @@ const Camera = () => {
 
   return (
     <div className="camera-container">
-      <div className="webcam-container">
-        <Webcam
-          style={{ transform: `scale(${zoomLevel})` }}
-          audio={false}
-          mirrored={true}
-          ref={webcamRef}
-          screenshotFormat="image/jpeg"
-          aspectRatio={aspectRatio}
-          videoConstraints={videoConstraints}
-          className="webcam"
-        />
-        <div className="controls-container">
-          <div className="zoom-controls">
-            <button className="capture-button" onClick={handleToggleCamera}>
-              Toggle Camera
-            </button>
-            <button className="capture-button" onClick={handleZoomIn}>
-              Zoom In
-            </button>
-            <button className="capture-button" onClick={handleZoomOut}>
-              Zoom Out
-            </button>
-          </div>
-          <div className="aspect-ratio-selector">
-            <button
-              className="capture-button"
-              onClick={() => handleAspectRatioChange("16:9")}
-            >
-              16:9
-            </button>
-            <button
-              className="capture-button"
-              onClick={() => handleAspectRatioChange("4:3")}
-            >
-              4:3
-            </button>
-            <button
-              className="capture-button"
-              onClick={() => handleAspectRatioChange("1:1")}
-            >
-              1:1
-            </button>
-          </div>
-          <button onClick={captureClickImage} className="capture-button">
-            Capture
+      <div className="controls-container">
+        <div className="aspect-ratio-selector">
+          <button
+            className="capture-button"
+            onClick={() => handleAspectRatioChange("16:9")}
+          >
+            16:9
           </button>
+          <button
+            className="capture-button"
+            onClick={() => handleAspectRatioChange("4:3")}
+          >
+            4:3
+          </button>
+          <button
+            className="capture-button"
+            onClick={() => handleAspectRatioChange("1:1")}
+          >
+            1:1
+          </button>
+        </div>
+        <div className="zoom-controls">
+          <button className="capture-button" onClick={handleToggleCamera}>
+            Toggle Camera
+          </button>
+          <button className="capture-button" onClick={() => handleZoom(0.1)}>
+            Zoom In
+          </button>
+          <button className="capture-button" onClick={() => handleZoom(-0.1)}>
+            Zoom Out
+          </button>
+        </div>
+        <button onClick={captureClickImage} className="capture-button">
+          Capture
+        </button>
+      </div>
+      <div
+        className="webcam-container"
+        style={{
+          paddingBottom: `${
+            100 / (aspectRatio.split(":")[0] / aspectRatio.split(":")[1])
+          }%`,
+        }}
+      >
+        <div className="webcam-wrapper">
+          <Webcam
+            audio={false}
+            mirrored={true}
+            ref={webcamRef}
+            screenshotFormat="image/jpeg"
+            aspectRatio={aspectRatio}
+            videoConstraints={videoConstraints}
+            className="webcam"
+          />
         </div>
       </div>
       <h2 className="GalleryOverview">Gallery Overview</h2>
+
       <div ref={galleryRef} className="gallery-container">
         {captureImages.map(({ src, aspectRatio }, index) => (
           <div key={index} className="gallery-item">

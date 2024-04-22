@@ -1,4 +1,4 @@
-.camera-container {
+/* .camera-container {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -95,4 +95,118 @@
 .GalleryOverview {
   font-weight: bold;
   margin-top: 500px;
+} */
+/* Base styles */
+.camera-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.webcam-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 100px;
+}
+
+.webcam {
+  width: 100%;
+  height: auto;
+}
+
+.controls-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 1;
+}
+
+.aspect-ratio-selector,
+.zoom-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.capture-button {
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.gallery-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.gallery-item {
+  width: 100%;
+}
+
+.image-container {
+  position: relative;
+}
+
+.gallery-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.delete-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: red;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Media queries for mobile view */
+@media (max-width: 600px) {
+  .webcam-container {
+    max-width: calc(100% - 40px);
+  }
+
+  .controls-container {
+    align-items: center;
+  }
+
+  .aspect-ratio-selector,
+  .zoom-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Media queries for desktop view */
+@media (min-width: 601px) {
+  .camera-container {
+    padding: 40px;
+  }
+
+  .webcam-container {
+    margin-bottom: 200px;
+  }
+
+  .capture-button {
+    font-size: 18px;
+  }
+
+  .GalleryOverview {
+    font-size: 24px;
+  }
 }
