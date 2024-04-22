@@ -1,15 +1,58 @@
+.camera-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.webcam-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 100px;
+}
+
+.webcam {
+  width: 100%;
+  height: auto;
+}
+
+.controls-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 1;
+}
+
+.aspect-ratio-selector,
+.zoom-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.capture-button {
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .gallery-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 10px;
-
 }
 
 .gallery-item {
   width: 100%;
-  position: relative;
-  overflow: hidden;
-  
 }
 
 .image-container {
@@ -20,7 +63,6 @@
   width: 100%;
   height: auto;
   display: block;
- 
 }
 
 .delete-button {
@@ -34,59 +76,23 @@
   cursor: pointer;
 }
 
-.camera-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-}
+@media (max-width: 600px) {
+  .webcam-container {
+    max-width: calc(100% - 40px);
+  }
 
-.webcam-container {
-  width: 100%;
-  max-width: 800px; /* Adjust max width as needed */
-  margin-bottom: 20px;
-}
-
-.controls-container {
-  display: flex;
-  flex-direction: column; /* Adjusted to column layout */
-  align-items: center; /* Center align items */
-  margin-bottom: 20px;
-}
-
-.aspect-ratio-selector,
-.zoom-controls {
-  margin-bottom: 10px; /* Adjusted margin for spacing between buttons */
-}
-
-.capture-button {
-  background-color: green;
-  color: white;
-  padding: 10px 20px 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-@media (max-width: 768px) {
   .controls-container {
-    flex-direction: column;
     align-items: center;
   }
 
   .aspect-ratio-selector,
   .zoom-controls {
-    margin-bottom: 10px;
-  }
-}
-
-@media (max-width: 600px) {
-  .webcam-container {
-    max-width: calc(100% - 40px); /* Adjust margins for smaller screens */
+    flex-direction: column;
+    align-items: center;
   }
 }
 
 .GalleryOverview {
-  margin-bottom: 50px;
   font-weight: bold;
+  margin-top: 500px;
 }
