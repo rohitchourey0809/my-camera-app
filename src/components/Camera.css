@@ -70,8 +70,8 @@
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px;
   margin: 230px; /* Add margin-top to create space between webcam and gallery */
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  padding-right: 1%;
+  box-shadow: rgba(223, 153, 153, 0.24) 0px 3px 6px;
+  padding-right: 15px;
 }
 
 .gallery-item {
